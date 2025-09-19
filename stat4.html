@@ -1,0 +1,1065 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="shortcut icon" href="https://upload.wikimedia.org/wikipedia/commons/thumb/c/cf/OOjs_UI_icon_eye.svg/1200px-OOjs_UI_icon_eye.svg.png" />
+    <title>Статус игрока 💙</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background-color: #0a0a0a;
+            color: #e0e0e0;
+            line-height: 1.6;
+            padding: 10px;
+            background-image: linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)), 
+                              url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="100" height="100" viewBox="0 0 100 100"><rect fill="%23121212" width="100" height="100"/><path fill="%231a1a1a" d="M0 0L100 100M100 0L0 100" stroke-width="0.5"/></svg>');
+            background-size: cover;
+        }
+        
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            background-color: #121212;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.8);
+            border: 1px solid #2a2a2a;
+            width: 100%;
+        }
+        
+        /* Стили для навигационной панели */
+        .navigation {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 2px solid #333;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+        
+        .nav-buttons {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+        
+        .nav-btn {
+            background: linear-gradient(145deg, #2a2a2a, #1a1a1a);
+            color: #fff;
+            border: 2px solid #333;
+            padding: 8px 15px;
+            border-radius: 15px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-block;
+            font-size: 14px;
+        }
+        
+        .nav-btn:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 5px 20px rgba(0, 255, 255, 0.3);
+            border-color: #0ff;
+            background: linear-gradient(145deg, #333, #222);
+        }
+        
+        .center-btn {
+            background: linear-gradient(145deg, #2a2a2a, #1a1a1a);
+            color: #fff;
+            padding: 10px 15px;
+            font-size: 14px;
+        }
+        
+        @media (max-width: 768px) {
+            .navigation {
+                flex-direction: column;
+                align-items: stretch;
+            }
+            
+            .center-btn {
+                order: 1;
+                margin: 10px 0;
+                text-align: center;
+            }
+        }
+        
+        h1 {
+            text-align: center;
+            margin-bottom: 20px;
+            color: #ffffff;
+            text-shadow: 0 0 5px rgba(255, 255, 255, 0.1);
+            font-size: 24px;
+            word-break: break-word;
+        }
+        
+        @media (min-width: 768px) {
+            h1 {
+                font-size: 28px;
+            }
+        }
+        
+        h2 {
+            color: #cccccc;
+            margin: 20px 0 12px;
+            font-size: 18px;
+            padding-left: 10px;
+            border-left: 4px solid #444;
+        }
+        
+        @media (min-width: 768px) {
+            h2 {
+                font-size: 20px;
+            }
+        }
+        
+        .status-section {
+            margin-bottom: 20px;
+            padding: 15px;
+            background-color: #1a1a1a;
+            border-radius: 6px;
+            border: 1px solid #2a2a2a;
+            transition: all 0.3s ease;
+        }
+        
+        .status-section:hover {
+            box-shadow: 0 0 15px rgba(0, 255, 255, 0.2);
+            border-color: #0ff;
+        }
+        
+        .stat-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin: 8px 0;
+            padding: 8px 12px;
+            background-color: #222;
+            border-radius: 4px;
+            transition: all 0.3s ease;
+            border: 1px solid #333;
+            flex-wrap: wrap;
+        }
+        
+        .stat-row:hover {
+            background-color: #2a2a2a;
+            box-shadow: 0 0 10px rgba(0, 255, 255, 0.2);
+            border-color: #0ff;
+        }
+        
+        .stat-name {
+            font-weight: bold;
+            color: #bbb;
+            min-width: 140px;
+            margin-bottom: 5px;
+        }
+        
+        @media (min-width: 768px) {
+            .stat-name {
+                min-width: 180px;
+            }
+        }
+        
+        .stat-value {
+            color: #f0f0f0;
+            flex: 1;
+        }
+        
+        input[type="text"], input[type="number"] {
+            background-color: #2d2d2d;
+            border: 1px solid #444;
+            color: #fff;
+            padding: 8px;
+            border-radius: 4px;
+            width: 100%;
+            transition: all 0.3s ease;
+            margin-bottom: 5px;
+        }
+        
+        @media (min-width: 768px) {
+            input[type="text"], input[type="number"] {
+                width: 160px;
+            }
+        }
+        
+        input[type="text"]:hover, input[type="number"]:hover {
+            box-shadow: 0 0 10px rgba(0, 255, 255, 0.2);
+            border-color: #0ff;
+        }
+        
+        input[type="text"]:focus, input[type="number"]:focus {
+            border-color: #0ff;
+            box-shadow: 0 0 10px rgba(0, 255, 255, 0.3);
+            outline: none;
+        }
+        
+        .abilities {
+            margin-left: 0;
+            padding: 0;
+        }
+        
+        @media (min-width: 768px) {
+            .abilities {
+                margin-left: 20px;
+            }
+        }
+        
+        .ability {
+            margin-bottom: 12px;
+            width: 100%;
+        }
+        
+        .ability input {
+            width: 100%;
+            margin-top: 5px;
+        }
+        
+        .points {
+            display: flex;
+            justify-content: space-around;
+            margin: 20px 0;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+        
+        .point-item {
+            background-color: #1a1a1a;
+            padding: 15px;
+            border-radius: 6px;
+            text-align: center;
+            min-width: 140px;
+            margin: 5px;
+            border: 1px solid #333;
+            transition: all 0.3s ease;
+            flex: 1;
+            max-width: 200px;
+        }
+        
+        @media (min-width: 768px) {
+            .point-item {
+                min-width: 160px;
+            }
+        }
+        
+        .point-item:hover {
+            box-shadow: 0 0 15px rgba(0, 255, 255, 0.2);
+            border-color: #0ff;
+        }
+        
+        .point-value {
+            font-size: 22px;
+            font-weight: bold;
+            color: #fff;
+            margin: 8px 0;
+        }
+        
+        @media (min-width: 768px) {
+            .point-value {
+                font-size: 26px;
+            }
+        }
+        
+        button {
+            background: linear-gradient(145deg, #2a2a2a, #1a1a1a);
+            color: #fff;
+            border: 2px solid #333;
+            padding: 8px 14px;
+            border-radius: 15px;
+            cursor: pointer;
+            font-weight: bold;
+            margin-top: 10px;
+            transition: all 0.3s ease;
+            font-size: 14px;
+        }
+        
+        @media (min-width: 768px) {
+            button {
+                padding: 10px 16px;
+                font-size: 16px;
+            }
+        }
+        
+        button:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 5px 20px rgba(0, 255, 255, 0.3);
+            border-color: #0ff;
+            background: linear-gradient(145deg, #333, #222);
+        }
+        
+        .energy-reserve {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 8px;
+            flex-wrap: wrap;
+            width: 100%;
+        }
+        
+        .energy-reserve input {
+            text-align: center;
+            width: 80px;
+            margin: 3px 0;
+        }
+        
+        @media (min-width: 768px) {
+            .energy-reserve {
+                justify-content: flex-start;
+            }
+        }
+        
+        .save-notification {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: linear-gradient(145deg, #2a2a2a, #1a1a1a);
+            color: #fff;
+            padding: 10px 20px;
+            border-radius: 15px;
+            opacity: 0;
+            transition: all 0.3s ease;
+            border: 2px solid #333;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+            z-index: 1000;
+        }
+        
+        @media (max-width: 768px) {
+            .save-notification {
+                top: 10px;
+                right: 10px;
+                padding: 8px 16px;
+            }
+        }
+        
+        .save-notification.show {
+            opacity: 1;
+            box-shadow: 0 5px 20px rgba(0, 255, 255, 0.3);
+            border-color: #0ff;
+        }
+        
+        .list-container {
+            margin-top: 15px;
+            width: 100%;
+        }
+        
+        .list-item {
+            display: flex;
+            align-items: center;
+            margin-bottom: 10px;
+            padding: 10px;
+            background-color: #222;
+            border-radius: 4px;
+            border: 1px solid #333;
+            transition: all 0.3s ease;
+            flex-wrap: wrap;
+        }
+        
+        .list-item:hover {
+            box-shadow: 0 0 10px rgba(0, 255, 255, 0.2);
+            border-color: #0ff;
+        }
+        
+        .list-item input {
+            flex-grow: 1;
+            margin-right: 10px;
+            margin-bottom: 5px;
+        }
+        
+        @media (min-width: 768px) {
+            .list-item input {
+                margin-bottom: 0;
+            }
+        }
+        
+        .stat-item {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 10px;
+            padding: 10px;
+            background-color: #222;
+            border-radius: 4px;
+            border: 1px solid #333;
+            transition: all 0.3s ease;
+            flex-wrap: wrap;
+        }
+        
+        .stat-item:hover {
+            box-shadow: 0 0 10px rgba(0, 255, 255, 0.2);
+            border-color: #0ff;
+        }
+        
+        .stat-inputs {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+            width: 100%;
+            margin-top: 5px;
+        }
+        
+        @media (min-width: 768px) {
+            .stat-inputs {
+                width: auto;
+                margin-top: 0;
+            }
+        }
+        
+        .stat-inputs input {
+            width: 100px;
+        }
+        
+        .remove-btn {
+            background: linear-gradient(145deg, #442222, #331111);
+            color: #ff8888;
+            padding: 6px 10px;
+            border-radius: 15px;
+            cursor: pointer;
+            margin-left: 10px;
+            border: 2px solid #552222;
+            transition: all 0.3s ease;
+            white-space: nowrap;
+            font-size: 12px;
+        }
+        
+        @media (min-width: 768px) {
+            .remove-btn {
+                font-size: 14px;
+            }
+        }
+        
+        .remove-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 3px 15px rgba(255, 0, 0, 0.3);
+            border-color: #f55;
+            background: linear-gradient(145deg, #552222, #441111);
+        }
+        
+        .add-btn {
+            background: linear-gradient(145deg, #224422, #113311);
+            color: #88ff88;
+            border: 2px solid #335533;
+            font-size: 12px;
+            padding: 6px 12px;
+        }
+        
+        @media (min-width: 768px) {
+            .add-btn {
+                font-size: 14px;
+                padding: 8px 14px;
+            }
+        }
+        
+        .add-btn:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 5px 20px rgba(0, 255, 0, 0.3);
+            border-color: #0f0;
+            background: linear-gradient(145deg, #225522, #114411);
+        }
+        
+        .section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+        
+        .counter-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin-top: 10px;
+        }
+        
+        .counter-btn {
+            background: linear-gradient(145deg, #2a2a2a, #1a1a1a);
+            color: #fff;
+            border: 2px solid #333;
+            width: 30px;
+            height: 30px;
+            border-radius: 15px;
+            cursor: pointer;
+            font-weight: bold;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 16px;
+            transition: all 0.3s ease;
+        }
+        
+        .counter-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 3px 15px rgba(0, 255, 255, 0.3);
+            border-color: #0ff;
+            background: linear-gradient(145deg, #333, #222);
+        }
+        
+        .counter-value {
+            font-size: 18px;
+            min-width: 40px;
+            text-align: center;
+            margin: 0 8px;
+        }
+        
+        .points-controls {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin-top: 10px;
+            gap: 5px;
+        }
+        
+        /* Стили для инвентаря */
+        .inventory-section {
+            margin-bottom: 20px;
+            padding: 15px;
+            background-color: #1a1a1a;
+            border-radius: 6px;
+            border: 1px solid #2a2a2a;
+            transition: all 0.3s ease;
+        }
+        
+        .inventory-section:hover {
+            box-shadow: 0 0 15px rgba(0, 255, 255, 0.2);
+            border-color: #0ff;
+        }
+        
+        .format-toolbar {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 10px;
+            padding: 8px;
+            background-color: #222;
+            border-radius: 4px;
+            border: 1px solid #333;
+            transition: all 0.3s ease;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+        
+        @media (min-width: 768px) {
+            .format-toolbar {
+                justify-content: flex-start;
+            }
+        }
+        
+        .format-toolbar:hover {
+            box-shadow: 0 0 10px rgba(0, 255, 255, 0.2);
+            border-color: #0ff;
+        }
+        
+        .format-btn {
+            background: linear-gradient(145deg, #2a2a2a, #1a1a1a);
+            color: #fff;
+            border: 2px solid #333;
+            padding: 6px 10px;
+            border-radius: 15px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: all 0.3s ease;
+            font-size: 12px;
+        }
+        
+        @media (min-width: 768px) {
+            .format-btn {
+                font-size: 14px;
+            }
+        }
+        
+        .format-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 3px 15px rgba(0, 255, 255, 0.3);
+            border-color: #0ff;
+            background: linear-gradient(145deg, #333, #222);
+        }
+        
+        .format-btn.active {
+            background: linear-gradient(145deg, #4ecca3, #3daa83);
+            color: #1a1a2e;
+            border-color: #4ecca3;
+        }
+        
+        #inventory {
+            min-height: 150px;
+            background-color: #2d2d2d;
+            border: 1px solid #444;
+            border-radius: 4px;
+            padding: 12px;
+            color: #fff;
+            overflow-y: auto;
+            max-height: 300px;
+            transition: all 0.3s ease;
+            width: 100%;
+            font-size: 14px;
+        }
+        
+        @media (min-width: 768px) {
+            #inventory {
+                min-height: 200px;
+                max-height: 400px;
+                font-size: 16px;
+            }
+        }
+        
+        #inventory:hover {
+            box-shadow: 0 0 10px rgba(0, 255, 255, 0.2);
+            border-color: #0ff;
+        }
+        
+        #inventory:focus {
+            outline: none;
+            border-color: #0ff;
+            box-shadow: 0 0 10px rgba(0, 255, 255, 0.3);
+        }
+        
+        /* Адаптивные стили для мобильных устройств */
+        @media (max-width: 768px) {
+            .container {
+                padding: 15px;
+            }
+            
+            .stat-row, .list-item, .stat-item {
+                flex-direction: column;
+                align-items: stretch;
+            }
+            
+            .stat-name {
+                margin-bottom: 8px;
+            }
+            
+            .remove-btn {
+                margin-left: 0;
+                margin-top: 8px;
+                align-self: flex-end;
+            }
+            
+            .energy-reserve {
+                flex-direction: column;
+                align-items: stretch;
+                gap: 5px;
+            }
+            
+            .points {
+                flex-direction: column;
+                align-items: center;
+            }
+            
+            .point-item {
+                width: 100%;
+                max-width: none;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Навигационная панель -->
+        <div class="navigation">
+            <div class="nav-buttons">
+                <a href="stat3.html" class="nav-btn">💛 Предыдущий</a>
+            </div>
+            
+            <a href="main.html" class="nav-btn center-btn">Перейти к выбору карты игрока</a>
+            
+            <div class="nav-buttons">
+                <a href="stat1.html" class="nav-btn">Следующий 💙</a>
+            </div>
+        </div>
+        
+        <h1>Статус игрока 💜</h1>
+        
+        <div class="status-section">
+            <h2>Основная информация</h2>
+            <div class="stat-row">
+                <span class="stat-name">Имя:</span>
+                <input type="text" id="name" value="Антонеско Фреско">
+            </div>
+            <div class="stat-row">
+                <span class="stat-name">Уровень:</span>
+                <input type="number" id="level" value="4" min="1">
+            </div>
+            <div class="stat-row">
+                <span class="stat-name">Раса:</span>
+                <input type="text" id="race" value="Человек">
+            </div>
+            <div class="stat-row">
+                <span class="stat-name">Ранг:</span>
+                <input type="text" id="rank" value="Особый">
+            </div>
+            <div class="stat-row">
+                <span class="stat-name">Класс:</span>
+                <input type="text" id="class" value="Отсутствует">
+            </div>
+            
+            <div class="section-header">
+                <h2>Титулы</h2>
+                <button class="add-btn" onclick="addTitle()">+ Добавить титул</button>
+            </div>
+            <div id="titles-list">
+                <!-- Титулы будут добавляться сюда -->
+            </div>
+        </div>
+        
+        <div class="status-section">
+            <h2>Основные Характеристики</h2>
+            <div class="stat-row">
+                <span class="stat-name">Сила:</span>
+                <input type="number" id="strength" value="12.6" step="1">
+            </div>
+            <div class="stat-row">
+                <span class="stat-name">Скорость:</span>
+                <input type="number" id="speed" value="5.3" step="1">
+            </div>
+            <div class="stat-row">
+                <span class="stat-name">Выносливость:</span>
+                <input type="number" id="endurance" value="5.7" step="1">
+            </div>
+            <div class="stat-row">
+                <span class="stat-name">Живучесть:</span>
+                <input type="number" id="vitality" value="15" step="1">
+            </div>
+            <div class="stat-row">
+                <span class="stat-name">Воля:</span>
+                <input type="number" id="will" value="8.2" step="1">
+            </div>
+            <div class="stat-row">
+                <span class="stat-name">Дух:</span>
+                <input type="number" id="spirit" value="2.1" step="1">
+            </div>
+            
+            <div class="section-header">
+                <h2>Дополнительные Характеристики</h2>
+                <button class="add-btn" onclick="addAdditionalStat()">+ Добавить характеристику</button>
+            </div>
+            <div id="additional-stats-list">
+                <!-- Дополнительные характеристики будут добавляться сюда -->
+            </div>
+        </div>
+        
+        <div class="status-section">
+            <div class="section-header">
+                <h2>Дополнительные Параметры</h2>
+                <button class="add-btn" onclick="addAdditionalParam()">+ Добавить параметр</button>
+            </div>
+            <div id="additional-params-list">
+                <!-- Дополнительные параметры будут добавляться сюда -->
+            </div>
+            
+            <div class="stat-row">
+                <span class="stat-name">Резерв энергии:</span>
+                <div class="energy-reserve">
+                    <input type="number" id="energy-current" value="1003" style="width: 150px;">
+                    <span>/</span>
+                    <input type="number" id="energy-max" value="1104" style="width: 150px;">
+                    <span>/</span>
+                    <input type="number" id="energy-regen" value="51" style="width: 100px;">
+                </div>
+            </div>
+        </div>
+        
+        <div class="status-section">
+            <h2>Способности</h2>
+            <div class="abilities">
+                <div class="ability">
+                    <div class="stat-name">I.</div>
+                    <input type="text" id="ability-1" value="Каменная чешуя Ранг: Эпический Уровень: 1 Бонус: (+10 Живучести, 50 маны/мин)">
+                </div>
+                <div class="ability">
+                    <div class="stat-name">II.</div>
+                    <input type="text" id="ability-2" value="">
+                </div>
+                <div class="ability">
+                    <div class="stat-name">III.</div>
+                    <input type="text" id="ability-3" value="">
+                </div>
+                <div class="ability">
+                    <div class="stat-name">IV.</div>
+                    <input type="text" id="ability-4" value="">
+                </div>
+                <div class="ability">
+                    <div class="stat-name">V.</div>
+                    <input type="text" id="ability-5" value="">
+                </div>
+            </div>
+            
+            <div class="list-container">
+                <div class="section-header">
+                    <h2>Системные Навыки</h2>
+                    <button class="add-btn" onclick="addSystemSkill()">+ Добавить навык</button>
+                </div>
+                <div id="system-skills-list">
+                    <!-- Навыки будут добавляться сюда -->
+                </div>
+            </div>
+        </div>
+        
+        <div class="points">
+            <div class="point-item">
+                <div>Свободные очки характеристик</div>
+                <div class="point-value" id="stat-points">8</div>
+                <div class="points-controls">
+                    <button class="counter-btn" onclick="changePoints('stat-points', -1)">-</button>
+                    <button class="counter-btn" onclick="changePoints('stat-points', 1)">+</button>
+                </div>
+            </div>
+            
+            <div class="point-item">
+                <div>Свободные очки навыков</div>
+                <div class="point-value" id="skill-points">12</div>
+                <div class="points-controls">
+                    <button class="counter-btn" onclick="changePoints('skill-points', -1)">-</button>
+                    <button class="counter-btn" onclick="changePoints('skill-points', 1)">+</button>
+                </div>
+            </div>
+            
+            <div class="point-item">
+                <div>Свободные очки способностей</div>
+                <div class="point-value" id="ability-points">0</div>
+                <div class="points-controls">
+                    <button class="counter-btn" onclick="changePoints('ability-points', -1)">-</button>
+                    <button class="counter-btn" onclick="changePoints('ability-points', 1)">+</button>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Новая секция инвентаря -->
+        <div class="inventory-section">
+            <div class="section-header">
+                <h2>Инвентарь</h2>
+            </div>
+            
+            <div class="format-toolbar">
+                <button class="format-btn" onclick="formatText('bold')" title="Жирный"><b>Ж</b></button>
+                <button class="format-btn" onclick="formatText('italic')" title="Курсив"><i>К</i></button>
+                <button class="format-btn" onclick="formatText('underline')" title="Подчеркивание"><u>П</u></button>
+            </div>
+            
+            <div id="inventory" contenteditable="true">
+                <!-- Содержимое инвентаря будет здесь -->
+            </div>
+        </div>
+        
+        <!-- Кнопки сохранения и сброса перенесены под инвентарь -->
+        <div style="text-align: center; margin-top: 20px;">
+            <button onclick="saveData()">Сохранить изменения</button>
+        </div>
+    </div>
+    
+    <div class="save-notification" id="saveNotification">Данные сохранены!</div>
+
+    <script>
+        // Загрузка данных из localStorage при загрузке страницы
+        document.addEventListener('DOMContentLoaded', function() {
+            loadData();
+            
+            // Автосохранение при изменении любого поля
+            const inputs = document.querySelectorAll('input');
+            inputs.forEach(input => {
+                input.addEventListener('change', saveData);
+            });
+            
+            // Автосохранение при изменении инвентаря
+            const inventory = document.getElementById('inventory');
+            inventory.addEventListener('input', saveData);
+        });
+        
+        // Функция для изменения очков
+        function changePoints(pointId, change) {
+            const pointsElement = document.getElementById(pointId);
+            let points = parseInt(pointsElement.textContent);
+            points += change;
+            
+            if (points >= 0) {
+                pointsElement.textContent = points;
+                saveData();
+            }
+        }
+        
+        // Функция для добавления титула
+        function addTitle() {
+            const titlesList = document.getElementById('titles-list');
+            const titleId = 'title-' + Date.now();
+            
+            const titleItem = document.createElement('div');
+            titleItem.className = 'list-item';
+            titleItem.innerHTML = `
+                <input type="text" id="${titleId}" placeholder="Введите название титула">
+                <div class="remove-btn" onclick="removeItem('${titleId}')">Удалить</div>
+            `;
+            
+            titlesList.appendChild(titleItem);
+            
+            // Добавляем обработчик изменения
+            document.getElementById(titleId).addEventListener('change', saveData);
+            
+            saveData();
+        }
+        
+        // Функция для добавления дополнительной характеристики
+        function addAdditionalStat() {
+            const statsList = document.getElementById('additional-stats-list');
+            const statId = 'add-stat-' + Date.now();
+            const valueId = 'add-stat-val-' + Date.now();
+            
+            const statItem = document.createElement('div');
+            statItem.className = 'stat-item';
+            statItem.innerHTML = `
+                <input type="text" id="${statId}" placeholder="Название характеристики">
+                <div class="stat-inputs">
+                    <input type="number" id="${valueId}" placeholder="Значение" step="1">
+                </div>
+                <div class="remove-btn" onclick="removeStatItem('${statId}', '${valueId}')">Удалить</div>
+            `;
+            
+            statsList.appendChild(statItem);
+            
+            // Добавляем обработчики изменения
+            document.getElementById(statId).addEventListener('change', saveData);
+            document.getElementById(valueId).addEventListener('change', saveData);
+            
+            saveData();
+        }
+        
+        // Функция для добавления дополнительного параметра
+        function addAdditionalParam() {
+            const paramsList = document.getElementById('additional-params-list');
+            const paramId = 'add-param-' + Date.now();
+            
+            const paramItem = document.createElement('div');
+            paramItem.className = 'list-item';
+            paramItem.innerHTML = `
+                <input type="text" id="${paramId}" placeholder="Введите параметр">
+                <div class="remove-btn" onclick="removeItem('${paramId}')">Удалить</div>
+            `;
+            
+            paramsList.appendChild(paramItem);
+            
+            // Добавляем обработчик изменения
+            document.getElementById(paramId).addEventListener('change', saveData);
+            
+            saveData();
+        }
+        
+        // Функция для добавления системного навыка
+        function addSystemSkill() {
+            const skillsList = document.getElementById('system-skills-list');
+            const skillId = 'system-skill-' + Date.now();
+            
+            const skillItem = document.createElement('div');
+            skillItem.className = 'list-item';
+            skillItem.innerHTML = `
+                <input type="text" id="${skillId}" placeholder="Введите название навыка">
+                <div class="remove-btn" onclick="removeItem('${skillId}')">Удалить</div>
+            `;
+            
+            skillsList.appendChild(skillItem);
+            
+            // Добавляем обработчик изменения
+            document.getElementById(skillId).addEventListener('change', saveData);
+            
+            saveData();
+        }
+        
+        // Функция для удаления элемента
+        function removeItem(itemId) {
+            const itemElement = document.getElementById(itemId);
+            if (itemElement) {
+                itemElement.parentElement.remove();
+                saveData();
+            }
+        }
+        
+        // Функция для удаления характеристики
+        function removeStatItem(statId, valueId) {
+            const statElement = document.getElementById(statId);
+            const valueElement = document.getElementById(valueId);
+            if (statElement && valueElement) {
+                statElement.parentElement.remove();
+                saveData();
+            }
+        }
+        
+        // Функция для форматирования текста в инвентаре
+        function formatText(command) {
+            document.getElementById('inventory').focus();
+            document.execCommand(command, false, null);
+            saveData();
+        }
+        
+        // Функция сохранения данных
+        function saveData() {
+            const data = {};
+            
+            // Сохраняем все основные input поля
+            const basicInputs = ['name', 'level', 'race', 'rank', 'class', 
+                                'strength', 'speed', 'endurance', 'vitality', 'will', 'spirit',
+                                'energy-current', 'energy-max', 'energy-regen',
+                                'ability-1', 'ability-2', 'ability-3', 'ability-4', 'ability-5'];
+            
+            basicInputs.forEach(id => {
+                const element = document.getElementById(id);
+                if (element) data[id] = element.value;
+            });
+            
+            // Сохраняем очки
+            data['stat-points'] = document.getElementById('stat-points').textContent;
+            data['skill-points'] = document.getElementById('skill-points').textContent;
+            data['ability-points'] = document.getElementById('ability-points').textContent;
+            
+            // Сохраняем титулы
+            const titles = document.querySelectorAll('#titles-list .list-item input');
+            data['titles-count'] = titles.length;
+            titles.forEach((title, index) => {
+                data[`title-${index}`] = title.value;
+            });
+            
+            // Сохраняем дополнительные характеристики
+            const additionalStats = document.querySelectorAll('#additional-stats-list .stat-item');
+            data['additional-stats-count'] = additionalStats.length;
+            additionalStats.forEach((stat, index) => {
+                const inputs = stat.querySelectorAll('input');
+                data[`add-stat-name-${index}`] = inputs[0].value;
+                data[`add-stat-value-${index}`] = inputs[1].value;
+            });
+            
+            // Сохраняем дополнительные параметры
+            const additionalParams = document.querySelectorAll('#additional-params-list .list-item input');
+            data['additional-params-count'] = additionalParams.length;
+            additionalParams.forEach((param, index) => {
+                data[`add-param-${index}`] = param.value;
+            });
+            
+            // Сохраняем системные навыки
+            const systemSkills = document.querySelectorAll('#system-skills-list .list-item input');
+            data['system-skills-count'] = systemSkills.length;
+            systemSkills.forEach((skill, index) => {
+                data[`system-skill-${index}`] = skill.value;
+            });
+            
+            // Сохраняем содержимое инвентаря
+            data['inventory'] = document.getElementById('inventory').innerHTML;
+            
+            // Показываем уведомление о сохранении
+            const notification = document.getElementById('saveNotification');
+            notification.classList.add('show');
+            setTimeout(() => {
+                notification.classList.remove('show');
+            }, 2000);
+        }
+        
+        // Функция загрузки данных
+        function loadData() {
+            // Здесь была бы логика загрузки из localStorage, но по требованию не используем localStorage
+            console.log("Загрузка данных (localStorage отключен по требованию)");
+        }
+    </script>
+</body>
+</html>
